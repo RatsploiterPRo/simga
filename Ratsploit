@@ -1,0 +1,358 @@
+local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
+
+local Window = Rayfield:CreateWindow({
+   Name = "Ratsploit hub🐀",
+   LoadingTitle = "Ratsploits hub",
+   LoadingSubtitle = "by Rat🐀",
+   ConfigurationSaving = {
+      Enabled = true,
+      FolderName = nil, -- Create a custom folder for your hub/game
+      FileName = "nil"
+   },
+   Discord = {
+      Enabled = false,
+      Invite = "noinvitelink", -- The Discord invite code, do not include discord.gg/. E.g. discord.gg/ABCD would be ABCD
+      RememberJoins = true -- Set this to false to make them join the discord every time they load it up
+   },
+   KeySystem = true, -- Set this to true to use our key system
+   KeySettings = {
+      Title = "Rat up ur key",
+      Subtitle = "Key System",
+      Note = "https://discord.gg/Jk3hpmVJT6",
+      FileName = "BBCockMonster", -- It is recommended to use something unique as other scripts using Rayfield may overwrite your key file
+      SaveKey = true, -- The user's key will be saved, but if you change the key, they will be unable to use your script
+      GrabKeyFromSite = true, -- If this is true, set Key below to the RAW site you would like Rayfield to get the key from
+      Key = {"https://pastebin.com/raw/dBbLLekW"} -- List of keys that will be accepted by the system, can be RAW file links (pastebin, github etc) or simple strings ("hello","key22")
+   }
+})
+
+local MainTab = Window:CreateTab("Home🏠", nil) -- Title, Image
+local MainSection = MainTab:CreateSection("Universal🌌")
+
+local Button = MainTab:CreateButton({
+   Name = "Infinite Jump Toggle",
+   Callback = function()
+_G.infinjump = not _G.infinjump
+
+if _G.infinJumpStarted == nil then
+
+	_G.infinJumpStarted = true
+	
+    game.StarterGui:SetCore("SendNotification", {Title="Ratsploit Hub"; Text="Infinite Jump Activated!"; Duration=5;})
+
+	local plr = game:GetService('Players').LocalPlayer
+	local m = plr:GetMouse()
+	m.KeyDown:connect(function(k)
+		if _G.infinjump then
+			if k:byte() == 32 then
+			humanoid = game:GetService'Players'.LocalPlayer.Character:FindFirstChildOfClass('Humanoid')
+			humanoid:ChangeState('Jumping')
+			wait()
+			humanoid:ChangeState('Seated')
+			end
+		end
+	end)
+end
+   end,
+})
+
+local SSlider = MainTab:CreateSlider({
+   Name = "WalkSpeed Slider",
+   Range = {1, 250},
+   Increment = 1,
+   Suffix = "Speed",
+   CurrentValue = 16,
+   Flag = "sliderws", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+   Callback = function(Value)
+        game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = (Value)
+   end,
+})
+
+local JPSlider = MainTab:CreateSlider({
+   Name = "JumpPower Slider",
+   Range = {1, 500},
+   Increment = 1,
+   Suffix = "Jump power",
+   CurrentValue = 50,
+   Flag = "sliderjp", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+   Callback = function(Value)
+        game.Players.LocalPlayer.Character.Humanoid.JumpPower = (Value)
+   end,
+})
+
+local Input = MainTab:CreateInput({
+   Name = "Walkspeed",
+   PlaceholderText = "Input a number",
+   RemoveTextAfterFocusLost = true,
+   Callback = function(Text)
+        game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = (Text)
+   end,
+})
+
+
+local Input = MainTab:CreateInput({
+   Name = "JumpPower",
+   PlaceholderText = "Input a number",
+   RemoveTextAfterFocusLost = true,
+   Callback = function(Text)
+        game.Players.LocalPlayer.Character.Humanoid.JumpPower = (Text)
+   end,
+})
+
+local Button = MainTab:CreateButton({
+   Name = "Reset speed and jump power",
+   Callback = function()
+        game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = (16)
+        game.Players.LocalPlayer.Character.Humanoid.JumpPower = (50)
+    SSlider:Set(16)
+    JPSlider:Set(50)
+   end,
+})
+
+local platform -- Declare the variable to hold the platform reference
+
+local Button = MainTab:CreateButton({
+   Name = "Create platform",
+   Callback = function()
+       -- Check if an existing platform exists and destroy it
+       if platform then
+           platform:Destroy() -- Destroy the existing platform
+           platform = nil -- Set it to nil after destroying
+       end
+       
+       -- Create a new Part for the platform
+       platform = Instance.new("Part")
+       
+       -- Ensure you're getting the player's character
+       local player = game.Players.LocalPlayer
+       local character = player and player.Character
+       local humanoidRootPart = character and character:FindFirstChild("HumanoidRootPart")
+
+       -- Check if humanoidRootPart is valid
+       if humanoidRootPart then
+           platform.Size = Vector3.new(100000000, 1000, 100000000)
+           platform.Transparency = 0.5
+           platform.Position = humanoidRootPart.Position - Vector3.new(0, 503.065, 0)
+           platform.Anchored = true
+           platform.Parent = game.Workspace 
+           platform.BrickColor = BrickColor.new("Bright blue") -- Platform color
+           platform.Material = Enum.Material.SmoothPlastic -- Material of the platform
+       else
+           warn("HumanoidRootPart not found.")
+       end
+   end,
+})
+
+local Button = MainTab:CreateButton({
+   Name = "Destroy platform",
+   Callback = function()
+       if platform then -- Check if platform exists
+           platform:Destroy() -- Destroy the platform if it exists
+           platform = nil -- Set it to nil after destroying
+       else
+           warn("No platform exists to destroy.")
+       end
+   end,
+})
+
+local Button = MainTab:CreateButton({
+   Name = "Lagswitch (X)",
+   Callback = function()
+        local brickplayer = game.Players.LocalPlayer
+local brickcharacter = brickplayer.Character
+
+local brick = nil
+
+local function spawnBrickUnderFeet()
+
+    local position = brickcharacter.HumanoidRootPart.Position + Vector3.new(0, -1, 0)
+    brick = Instance.new("Part")
+    brick.Parent = game.Workspace
+    brick.Anchored = true
+    brick.CanCollide = False
+    brick.Position = position
+    brick.Size = Vector3.new(3, 7, 3)
+    brick.Transparency = 0.7
+end
+
+game.UserInputService.InputBegan:Connect(function(input, gameProcessed)
+    if input.KeyCode == Enum.KeyCode.X and not gameProcessed then
+        if brick then
+            brick:Destroy()
+            brick = nil
+            else
+                spawnBrickUnderFeet()
+        end
+    end
+end)
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/RatsploiterPRo/simga/refs/heads/main/Lagswitch", true))()   
+    end,
+})
+
+local Button = MainTab:CreateButton({
+   Name = "Invis (Z)",
+   Callback = function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/RatsploiterPRo/simga/refs/heads/main/Invis"))()
+    end,
+})
+
+local Button = MainTab:CreateButton({
+   Name = "ESP (H)",
+   Callback = function()
+        loadstring(game:HttpGet('https://pastebin.com/raw/VxbKntTU'))()
+    end,
+})
+
+
+local ScriptTab = Window:CreateTab("Script hub", nil) -- Title, Image
+local ScriptSection = ScriptTab:CreateSection("Main")
+
+
+
+local Button = ScriptTab:CreateButton({
+   Name = "Ability wars",
+   Callback = function()
+        loadstring(game:HttpGet('https://pastefy.app/Kzc4felK/raw'))()
+    end,
+})
+
+local Button = ScriptTab:CreateButton({
+   Name = "Ability wars bot",
+   Callback = function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/blueman5/Abilitywars/main/bot",true))()
+    end,
+})
+
+local Button = ScriptTab:CreateButton({
+   Name = "Slap battle 0 cd",
+   Callback = function()
+        local player = game.Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+local tool = character:FindFirstChildOfClass("Tool") or player.Backpack:FindFirstChildOfClass("Tool")
+ 
+while character.Humanoid.Health ~= 0 do
+local localscript = tool:FindFirstChildOfClass("LocalScript")
+local localscriptclone = localscript:Clone()
+localscriptclone = localscript:Clone()
+localscriptclone:Clone()
+localscript:Destroy()
+localscriptclone.Parent = tool
+wait(0.1)
+end
+    end,
+})
+
+local Button = ScriptTab:CreateButton({
+   Name = "Inf yeild",
+   Callback = function()
+        loadstring(game:HttpGet('https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source'))()
+   end,
+})
+
+local Button = ScriptTab:CreateButton({
+   Name = "Break in 2",
+   Callback = function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/RScriptz/RobloxScripts/main/BreakIn2.lua"))()
+    end,
+})
+
+local Button = ScriptTab:CreateButton({
+   Name = "Spy",
+   Callback = function()
+        loadstring(game:HttpGet("https://pastebin.com/raw/VH3Ew6Y5"))()
+    end,
+})
+
+local Button = ScriptTab:CreateButton({
+   Name = "Da hood",
+   Callback = function()
+        loadstring(game:HttpGet('https://raw.githubusercontent.com/cool5013/TBO/main/TBOscript'))()
+    end,
+})
+
+
+local Button = ScriptTab:CreateButton({
+   Name = "Telekenesis",
+   Callback = function()
+        loadstring(game:HttpGet("https://pastebin.com/raw/07GGb4Dk"))()
+    end,
+})
+
+
+local Button = ScriptTab:CreateButton({
+   Name = "MM2",
+   Callback = function()
+   loadstring(game:HttpGet("https://raw.githubusercontent.com/Au0yX/Community/main/XhubMM2"))()
+    end,
+})
+
+local Button = ScriptTab:CreateButton({
+   Name = "Build a boat auto farm",
+   Callback = function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/DFDERD41/autofarms-2-game/main/BABFT_autofarm"))()
+    end,
+})
+
+
+local Button = ScriptTab:CreateButton({
+   Name = "Bypass (sometimes doesnt work)",
+   Callback = function()
+       -- Table to map normal alphabet letters to fancy symbols
+local fancyAlphabet = {
+    A = "ä", B = "ḅ", C = "ċ", D = "ḋ", E = "ë", F = "ḟ",
+    G = "̠ġ", H = "ḧ", I = "ï", J = "j", K = "ḳ", L = "ḷ",
+    M = "ṁ", N = "ṅ", O = "ö", P = "ṗ", Q = "q", R = "ṛ",
+    S = "ṡ", T = "ẗ", U = "ü", V = "ṿ", W = "ẅ", X = "ẍ",
+    Y = "ÿ", Z = "ż"
+}
+
+-- Flag to toggle the fancy text on or off
+local fancyTextEnabled = true
+
+-- Function to convert a message to fancy text
+local function convertToFancyText(message)
+    local fancyMessage = ""
+    for i = 1, #message do
+        -- Get each character and convert it to uppercase
+        local char = message:sub(i, i):upper()
+        -- Replace with fancy equivalent if it exists, otherwise use the original character
+        local fancyChar = fancyAlphabet[char] or char
+        fancyMessage = fancyMessage .. fancyChar
+    end
+    return fancyMessage
+end
+
+-- Function to handle chat messages
+local function handleChatMessages()
+    local textChatService = game:GetService("TextChatService")
+    local localPlayer = game:GetService("Players").LocalPlayer
+
+    -- Event listener for incoming messages
+    textChatService.OnIncomingMessage = function(chatMessage)
+        -- Check if the message is from the local player
+        if chatMessage.TextSource and chatMessage.TextSource.UserId == localPlayer.UserId then
+            local messageText = chatMessage.Text
+            
+            -- Commands to toggle fancy text on or off
+            if messageText:lower() == ";off" then
+                fancyTextEnabled = false
+            elseif messageText:lower() == ";on" then
+                fancyTextEnabled = true
+            elseif fancyTextEnabled then
+                -- Convert the message to fancy text if enabled
+                chatMessage.Text = convertToFancyText(messageText)
+            end
+        end
+    end
+end
+
+-- Initialize chat handling if TextChatService is available
+local textChatService = game:GetService("TextChatService")
+
+if textChatService then
+    handleChatMessages()
+end
+   end,
+})
+
+
